@@ -1,6 +1,7 @@
 import { type User, type InsertUser, type Client, type InsertClient, type Task, type InsertTask } from "@shared/schema";
 import { randomUUID } from "crypto";
 import { encryptCredentials, decryptCredentials } from "./encryption";
+import { hashPassword } from "./auth";
 
 export interface IStorage {
   // Users
@@ -41,6 +42,23 @@ export class MemStorage implements IStorage {
     this.users = new Map();
     this.clients = new Map();
     this.tasks = new Map();
+    this.initializeDefaultAdmin();
+  }
+
+  private async initializeDefaultAdmin() {
+    // Create default admin user if no users exist
+    if (this.users.size === 0) {
+      const hashedPassword = await hashPassword("admin123");
+      const adminUser: User = {
+        id: randomUUID(),
+        username: "admin",
+        password: hashedPassword,
+        name: "Tax Consultant Admin",
+        createdAt: new Date()
+      };
+      this.users.set(adminUser.id, adminUser);
+      console.log("✓ Default admin user created - Username: admin, Password: admin123");
+    }
   }
 
   async getUser(id: string): Promise<User | undefined> {
