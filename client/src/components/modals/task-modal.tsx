@@ -60,7 +60,7 @@ export function TaskModal({ open, onClose, task, preselectedClientId }: TaskModa
       description: task?.description || "",
       serviceType: task?.serviceType || "",
       status: task?.status || "pending",
-      deadline: task?.deadline || undefined,
+      deadline: task?.deadline || "",
       notes: task?.notes || "",
       fileUrls: task?.fileUrls || [],
     },
@@ -92,10 +92,16 @@ export function TaskModal({ open, onClose, task, preselectedClientId }: TaskModa
   });
 
   const onSubmit = (data: InsertTask) => {
+    // Convert deadline date to ISO string if it exists
+    const submitData = {
+      ...data,
+      deadline: data.deadline ? new Date(data.deadline).toISOString() : undefined,
+    };
+    
     if (isEditing) {
-      updateMutation.mutate(data);
+      updateMutation.mutate(submitData);
     } else {
-      createMutation.mutate(data);
+      createMutation.mutate(submitData);
     }
   };
 
@@ -239,37 +245,14 @@ export function TaskModal({ open, onClose, task, preselectedClientId }: TaskModa
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Deadline</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "w-full pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) =>
-                            date < new Date(new Date().setHours(0, 0, 0, 0))
-                          }
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
+                    <FormControl>
+                      <Input
+                        type="datetime-local"
+                        value={field.value || ""}
+                        onChange={(e) => field.onChange(e.target.value)}
+                        placeholder="Select deadline"
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
