@@ -53,12 +53,21 @@ export const insertClientSchema = createInsertSchema(clients).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
+}).extend({
+  email: z.string().optional(),
+  cnic: z.string().optional(),
+  ntn: z.string().optional(),
+  notes: z.string().optional(),
 });
 
 export const insertTaskSchema = createInsertSchema(tasks).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
+}).extend({
+  description: z.string().optional(),
+  deadline: z.string().datetime().optional(),
+  notes: z.string().optional(),
 });
 
 export type InsertUser = z.infer<typeof insertUserSchema>;
