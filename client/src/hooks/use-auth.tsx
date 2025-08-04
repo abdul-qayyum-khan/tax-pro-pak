@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { apiRequest } from "@/lib/api";
+import { queryClient } from "@/lib/queryClient";
 
 interface User {
   id: string;
@@ -39,12 +40,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("token", data.token);
     localStorage.setItem("user", JSON.stringify(data.user));
     setUser(data.user);
+    
+    // Invalidate all queries after successful login
+    queryClient.invalidateQueries();
   };
 
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
+    
+    // Clear all queries on logout
+    queryClient.clear();
   };
 
   return (

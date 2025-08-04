@@ -105,6 +105,10 @@ export class MemStorage implements IStorage {
     const client: Client = {
       ...insertClient,
       id,
+      email: insertClient.email || null,
+      cnic: insertClient.cnic || null,
+      ntn: insertClient.ntn || null,
+      notes: insertClient.notes || null,
       portalCredentials: encryptCredentials(insertClient.portalCredentials),
       createdAt: now,
       updatedAt: now,
@@ -164,6 +168,9 @@ export class MemStorage implements IStorage {
     const task: Task = {
       ...insertTask,
       id,
+      description: insertTask.description || null,
+      deadline: insertTask.deadline || null,
+      notes: insertTask.notes || null,
       createdAt: now,
       updatedAt: now,
       fileUrls: insertTask.fileUrls || [],
@@ -216,7 +223,7 @@ export class MemStorage implements IStorage {
 
     const completedThisMonth = tasks.filter(task => 
       task.status === 'completed' &&
-      task.updatedAt >= monthStart
+      task.updatedAt && task.updatedAt >= monthStart
     ).length;
 
     return {

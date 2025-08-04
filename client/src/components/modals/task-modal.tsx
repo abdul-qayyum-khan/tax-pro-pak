@@ -25,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Combobox } from "@/components/ui/combobox";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -130,20 +131,19 @@ export function TaskModal({ open, onClose, task, preselectedClientId }: TaskModa
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Client *</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a client" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {clients.map((client: any) => (
-                          <SelectItem key={client.id} value={client.id}>
-                            {client.fullName}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <FormControl>
+                      <Combobox
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        options={clients.map((client: any) => ({
+                          value: client.id,
+                          label: `${client.fullName}${client.ntn ? ` (NTN: ${client.ntn})` : ''}`
+                        }))}
+                        placeholder="Select a client..."
+                        searchPlaceholder="Search clients..."
+                        emptyMessage="No clients found."
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}

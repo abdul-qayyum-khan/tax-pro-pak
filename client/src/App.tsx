@@ -9,6 +9,8 @@ import NotFound from "@/pages/not-found";
 import Dashboard from "@/pages/dashboard";
 import Clients from "@/pages/clients";
 import Tasks from "@/pages/tasks";
+import Documents from "@/pages/documents";
+import Reports from "@/pages/reports";
 import Login from "@/pages/login";
 
 function AuthenticatedApp() {
@@ -20,6 +22,8 @@ function AuthenticatedApp() {
           <Route path="/" component={Dashboard} />
           <Route path="/clients" component={Clients} />
           <Route path="/tasks" component={Tasks} />
+          <Route path="/documents" component={Documents} />
+          <Route path="/reports" component={Reports} />
           <Route component={NotFound} />
         </Switch>
       </div>
